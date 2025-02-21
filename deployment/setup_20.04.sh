@@ -338,8 +338,8 @@ function setup_chatwoot() {
   rvm install "ruby-3.3.3"
   rvm use 3.3.3 --default
 
-  git clone https://github.com/pablowilliam/chatwoot-p.git
-  cd chatwoot-p
+  git clone https://github.com/pablowilliam/chatwoot.git
+  cd chatwoot
   git checkout "$BRANCH"
   chmod -R 777 bin
   bundle
@@ -369,7 +369,7 @@ EOF
 ##############################################################################
 function run_db_migrations(){
   sudo -i -u chatwoot << EOF
-  cd chatwoot-p
+  cd chatwoot
   RAILS_ENV=production POSTGRES_STATEMENT_TIMEOUT=600s bundle exec rails db:chatwoot_prepare
 EOF
 }
@@ -415,14 +415,14 @@ function setup_ssl() {
     echo "debug: letsencrypt email: $le_email"
   fi
   curl https://ssl-config.mozilla.org/ffdhe4096.txt >> /etc/ssl/dhparam
-  https://raw.githubusercontent.com/pablowilliam/chatwoot-p/main/deployment/nginx_chatwoot.conf
+  https://raw.githubusercontent.com/pablowilliam/chatwoot/main/deployment/nginx_chatwoot.conf
   cp nginx_chatwoot.conf /etc/nginx/sites-available/nginx_chatwoot.conf
   certbot certonly --non-interactive --agree-tos --nginx -m "$le_email" -d "$domain_name"
   sed -i "s/chatwoot.domain.com/$domain_name/g" /etc/nginx/sites-available/nginx_chatwoot.conf
   ln -s /etc/nginx/sites-available/nginx_chatwoot.conf /etc/nginx/sites-enabled/nginx_chatwoot.conf
   systemctl restart nginx
   sudo -i -u chatwoot << EOF
-  cd chatwoot-p
+  cd chatwoot
   sed -i "s/http:\/\/0.0.0.0:3000/https:\/\/$domain_name/g" .env
 EOF
   systemctl restart chatwoot.target
@@ -705,7 +705,7 @@ function ssl() {
 ##############################################################################
 function upgrade_prereq() {
   sudo -i -u chatwoot << "EOF"
-  cd chatwoot-p
+  cd chatwoot
   git update-index --refresh
   git diff-index --quiet HEAD --
   if [ "$?" -eq 1 ]; then
@@ -813,7 +813,7 @@ function upgrade() {
   sudo -i -u chatwoot << "EOF"
 
   # Navigate to the Chatwoot directory
-  cd chatwoot-p
+  cd chatwoot
 
   # Pull the latest version of the master branch
   git checkout master && git pull
@@ -930,7 +930,7 @@ function version() {
 function cwctl_upgrade_check() {
     echo "Checking for cwctl updates..."
 
-    local remote_version_url="https://raw.githubusercontent.com/pablowilliam/chatwoot-p/main/VERSION_CWCTL"
+    local remote_version_url="https://raw.githubusercontent.com/pablowilliam/chatwoot/main/VERSION_CWCTL"
     local remote_version=$(curl -s "$remote_version_url")
 
     #Check if pip is not installed, and install it if not
