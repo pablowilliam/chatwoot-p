@@ -369,7 +369,7 @@ EOF
 ##############################################################################
 function run_db_migrations(){
   sudo -i -u chatwoot << EOF
-  cd chatwoot
+  cd chatwoot-p
   RAILS_ENV=production POSTGRES_STATEMENT_TIMEOUT=600s bundle exec rails db:chatwoot_prepare
 EOF
 }
@@ -422,7 +422,7 @@ function setup_ssl() {
   ln -s /etc/nginx/sites-available/nginx_chatwoot.conf /etc/nginx/sites-enabled/nginx_chatwoot.conf
   systemctl restart nginx
   sudo -i -u chatwoot << EOF
-  cd chatwoot
+  cd chatwoot-p
   sed -i "s/http:\/\/0.0.0.0:3000/https:\/\/$domain_name/g" .env
 EOF
   systemctl restart chatwoot.target
@@ -705,7 +705,7 @@ function ssl() {
 ##############################################################################
 function upgrade_prereq() {
   sudo -i -u chatwoot << "EOF"
-  cd chatwoot
+  cd chatwoot-p
   git update-index --refresh
   git diff-index --quiet HEAD --
   if [ "$?" -eq 1 ]; then
@@ -813,7 +813,7 @@ function upgrade() {
   sudo -i -u chatwoot << "EOF"
 
   # Navigate to the Chatwoot directory
-  cd chatwoot
+  cd chatwoot-p
 
   # Pull the latest version of the master branch
   git checkout master && git pull
