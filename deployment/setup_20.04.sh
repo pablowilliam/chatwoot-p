@@ -415,7 +415,7 @@ function setup_ssl() {
     echo "debug: letsencrypt email: $le_email"
   fi
   curl https://ssl-config.mozilla.org/ffdhe4096.txt >> /etc/ssl/dhparam
-  https://raw.githubusercontent.com/pablowilliam/chatwoot/main/deployment/nginx_chatwoot.conf
+  https://github.com/pablowilliam/chatwoot/blob/main/deployment/nginx_chatwoot.conf
   cp nginx_chatwoot.conf /etc/nginx/sites-available/nginx_chatwoot.conf
   certbot certonly --non-interactive --agree-tos --nginx -m "$le_email" -d "$domain_name"
   sed -i "s/chatwoot.domain.com/$domain_name/g" /etc/nginx/sites-available/nginx_chatwoot.conf
@@ -970,7 +970,7 @@ function cwctl_upgrade_check() {
 #   None
 ##############################################################################
 function upgrade_cwctl() {
-    wget https://raw.githubusercontent.com/chatwoot/chatwoot/master/deployment/install.sh -O /usr/local/bin/cwctl > /dev/null 2>&1 && chmod +x /usr/local/bin/cwctl
+    wget https://github.com/pablowilliam/chatwoot/blob/main/deployment/install.sh -O /usr/local/bin/cwctl > /dev/null 2>&1 && chmod +x /usr/local/bin/cwctl
 }
 
 ##############################################################################
